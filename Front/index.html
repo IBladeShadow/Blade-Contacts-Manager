@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Blade Contacts Manager</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Blade Contacts Manager</h1>
+        <p>مدیریت مخاطبین</p>
+    </div>
+
+
+    {% if message %}
+        <div class="message">
+            {{ message }}
+        </div>
+    {% endif %}
+
+
+    <div class="panel">
+
+        <h2>➕ افزودن مخاطب</h2>
+
+        <form action="/add" method="POST">
+
+            <input
+                type="text"
+                name="name"
+                placeholder="نام مخاطب"
+                required
+            >
+
+            <input
+                type="text"
+                name="number"
+                placeholder="شماره تلفن"
+                maxlength="11"
+                required
+            >
+
+            <button class="add-btn" type="submit">
+                افزودن مخاطب
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="panel">
+
+        <h2>🔎 جستجوی مخاطب</h2>
+
+        <form action="/" method="GET" class="search-form">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="نام مخاطب را جستجو کنید..."
+                value="{{ search }}"
+            >
+
+            <button class="search-btn" type="submit">
+                جستجو
+            </button>
+
+            {% if search %}
+                <a href="/" class="clear-btn">
+                    پاک کردن
+                </a>
+            {% endif %}
+
+        </form>
+
+
+        <div class="count">
+            تعداد مخاطبین: {{ contacts|length }}
+        </div>
+
+
+        {% if contacts %}
+
+            <div class="contacts">
+
+                {% for contact in contacts %}
+
+                    <div class="contact">
+
+                        <div class="contact-info">
+
+                            <div class="contact-name">
+                                {{ contact.name }}
+                            </div>
+
+                            <div class="contact-number">
+                                📞
+                                <span class="number">
+                                    {{ contact.number }}
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            action="/delete/{{ contact.index }}"
+                            method="POST"
+                            class="delete-form"
+                            onsubmit="return confirm('آیا از حذف این مخاطب مطمئن هستید؟');"
+                        >
+
+                        <button
+                            type="submit"
+                            class="delete-btn"
+                        >
+                            <img src="public/trash.svg" alt="حذف">
+                        </button>
+
+                        </form>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+                😔 مخاطبی پیدا نشد
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
